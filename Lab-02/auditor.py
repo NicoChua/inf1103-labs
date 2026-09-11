@@ -14,3 +14,6 @@ while menuOpen == True:
     else:
         print("Please input a number")
         failedEntry += 1
+        
+print("Total units processed: " + str(inventory))
+print("Number of Failed/Rejected Entries: " + str(failedEntry))
