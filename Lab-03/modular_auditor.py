@@ -1,7 +1,7 @@
 # Global Constants
 MAX_CAPACITY = 500
 TAX_RATE = 0.1
-FAILED_ENTRY = 0    
+FAILED_ENTRY = 0
 
 def main():
     inventory = 0
@@ -20,6 +20,8 @@ def main():
                 break
             inventory = process_delivery(inventory, stockQty)
             tax_amount += calculate_tax(stockQty)
+
+    generate_report(inventory, FAILED_ENTRY)
 
 def get_valid_input():
     global FAILED_ENTRY
@@ -40,6 +42,10 @@ def calculate_tax(amount):
     global TAX_RATE
     tax = float(amount) * TAX_RATE
     return tax
+
+def generate_report(total_units, failed_entries):
+    print("Total Deliveries Processed: " + str(total_units))
+    print("Number of Failed/Rejected Entries: " + str(failed_entries))
 
 if __name__ == "__main__":
     main()
