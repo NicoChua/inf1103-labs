@@ -19,6 +19,7 @@ def main():
             if inventory >= MAX_CAPACITY:
                 break
             inventory = process_delivery(inventory, stockQty)
+            tax_amount += calculate_tax(stockQty)
 
 def get_valid_input():
     global FAILED_ENTRY
@@ -34,6 +35,11 @@ def get_valid_input():
 def process_delivery(current_total, new_value):
     new_total = current_total + int(new_value)
     return new_total
+
+def calculate_tax(amount):
+    global TAX_RATE
+    tax = float(amount) * TAX_RATE
+    return tax
 
 if __name__ == "__main__":
     main()
