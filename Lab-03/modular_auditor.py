@@ -13,6 +13,12 @@ def main():
         stockQty = get_valid_input()
         if stockQty == "quit":
             exit_program = True
+        elif stockQty == None:
+            continue
+        else:
+            if inventory >= MAX_CAPACITY:
+                break
+            inventory = process_delivery(inventory, stockQty)
 
 def get_valid_input():
     global FAILED_ENTRY
@@ -24,6 +30,10 @@ def get_valid_input():
         FAILED_ENTRY += 1
         return None
     return user_input
+
+def process_delivery(current_total, new_value):
+    new_total = current_total + int(new_value)
+    return new_total
 
 if __name__ == "__main__":
     main()
