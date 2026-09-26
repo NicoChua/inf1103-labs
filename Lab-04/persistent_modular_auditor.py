@@ -4,6 +4,7 @@ TAX_RATE = 0.1
 FAILED_ENTRY = 0
 INVENTORY_FILE = "inventory.txt"
 
+# Gets and validates user input
 def get_valid_input():
     global FAILED_ENTRY
     user_input = input("Enter Stock Quantity: ")
@@ -28,44 +29,58 @@ def generate_report(total_units, failed_entries):
     print("Total Deliveries Processed: " + str(total_units))
     print("Number of Failed/Rejected Entries: " + str(failed_entries))
 
+# Loads Inventory from inventory.txt
 def load_inventory():
     inventory = 0
     transaction_history = []
         
     with open(INVENTORY_FILE, "r") as file:
-        inventory = file.readline()
+        firstLine = file.readline()
+        if firstLine:
+            inventory = int(firstLine)
         transaction_history = file.readlines()
     return inventory, transaction_history
 
+# Stores inventory and transaction history into inventory.txt
+def save_inventory(inventory, transaction_history):
+    with open("inventory.txt", "w") as file:
+        file.write(str(inventory) + "\n")
+        file.writelines(transaction_history)
 
 def main():
+    # Variables
     inventory = 0
     tax_amount = 0
     exit_program = False
     global MAX_CAPACITY
     transaction_history = []
 
+    # Load Inventory
     inventory, transaction_history = load_inventory()
 
-    print("Inventory: " + inventory)
-    for line in transaction_history:
+    # Shows Current Inventory and Transaction History
+    print("Inventory: " + str(inventory))
+    for line in transaction_history[1:]:
         print("Transaction History: " + line.strip())
 
-    # while not exit_program:
-    #     stockQty = get_valid_input()
-    #     if stockQty == "quit":
-    #         exit_program = True
-    #     elif stockQty == None:
-    #         continue
-    #     else:
-    #         if inventory >= MAX_CAPACITY:
-    #             break
-    #         inventory = process_delivery(inventory, stockQty)
-    #         tax_amount += calculate_tax(stockQty)
-    #         transaction_history.append(int(stockQty))
+    # Main Program to get user input
+    while not exit_program:
+        stockQty = get_valid_input()
+        if stockQty == "quit":
+            exit_program = True
+        elif stockQty == None:
+            continue
+        else:
+            if inventory >= MAX_CAPACITY:
+                break
+            inventory = process_delivery(inventory, stockQty)
+            tax_amount += calculate_tax(stockQty)
+            transaction_history.append(f"\n{stockQty}")
 
-    # generate_report(inventory, FAILED_ENTRY)
+    # Final Output
+    generate_report(inventory, FAILED_ENTRY)
+    save_inventory(inventory, transaction_history)
 
-
+# Main Function
 if __name__ == "__main__":
     main()
