@@ -32,26 +32,40 @@ def save_inventory(inventory):
 def search_product(inventory, product_id):
     for product in inventory:
         if product['id'] == product_id:
+            print(f"ID: {product['id']} | Name: {product['name']} | Price: {product['price']} | Stock: {product['stock']}")
             return product
     else:
+        print("Product not found")
         return None
 
 # Add Product to inventory
 def add_product(inventory, product_id, name, price, stock):
+    new_product = {
+        "id": product_id,
+        "name": name,
+        "price": round(float(price), 2),
+        "stock": round(float(stock), 2)
+    }
     for product in inventory:
         if product['id'] == product_id:
+            print("Product not added")
             return False
     else:
-        inventory.append(product)
-        save_inventory(inventory)
+        inventory.append(new_product)
+        print("\Product added successfully!\n")
         return True
 
 # Update Product in inventory
-def update_stock(inventory, product_id, new_stock):
+def update_stock(inventory, product_id):
     for product in inventory:
         if product['id'] == product_id:
+            print(f"Product Found: \nName: {product['name']} \nCurrent Stock: {product['stock']}")
+            new_stock = input("New Stock Quantity: ")
+            product['stock'] = int(new_stock)
+            print("\nStock Updated successfully!\n")
             return True
     else:
+        print("Stock not updated")
         return False
 
 # Display Inventory
@@ -77,16 +91,16 @@ def get_valid_input():
 
 def main():
     # Variables
-    inventory = 0
+    inventory = []
     exit_program = False
+    inventory, status = load_inventory()
 
     # Main Program to get user input
     while not exit_program:
-        print("============================================")
+        print("\n============================================")
         print("INVENTORY MANAGEMENT SYSTEM")
-        print("============================================")
+        print("============================================\n")
 
-        inventory, status = load_inventory()
         if status:
             print("inventory.json found.")
             print("Inventory loaded successfully.")
@@ -97,22 +111,31 @@ def main():
         # Menu
         user_input = get_valid_input()
 
-
-        
-    #     if stockQty == "quit":
-    #         exit_program = True
-    #     elif stockQty == None:
-    #         continue
-    #     else:
-    #         if inventory >= MAX_CAPACITY:
-    #             break
-    #         inventory = process_delivery(inventory, stockQty)
-    #         tax_amount += calculate_tax(stockQty)
-    #         transaction_history.append(f"\n{stockQty}")
-
-    # # Final Output
-    # generate_report(inventory, FAILED_ENTRY)
-    # save_inventory(inventory, transaction_history)
+        if user_input == "1":
+            display_all(inventory)
+        elif user_input == "2":
+            print("Add New Product")
+            product_id = input("Product ID: ")
+            name = input("Product Name: ")
+            price = input("Price: ")
+            stock = input("Stock Quantity: ")
+            add_product(inventory, product_id, name, price, stock)
+        elif user_input == "3":
+            print("Update Stock")
+            product_id = input("Product ID: ")
+            update_stock(inventory, product_id)
+        elif user_input == "4":
+            print("Search Product")
+            product_id = input("Enter Product ID: ")
+            search_product(inventory, product_id)
+        elif user_input == "5":
+            save_inventory(inventory)
+        elif user_input == "6":
+            print("Saving inventory before exit...")
+            save_inventory(inventory)
+            print("Inventory saved successfully")
+            print("\nThank you for using Inventory Management System.\nProgram terminated")
+            break
 
 # Main Function
 if __name__ == "__main__":
