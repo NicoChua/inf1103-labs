@@ -29,23 +29,43 @@ def save_inventory(inventory):
         print("Unable to save inventory")
 
 
+# Gets and validates user input
+def get_valid_input():
+    print("----------MENU----------")
+    print("1. Display All Products")
+    print("2. Add Product")
+    print("3. Update Stock")
+    print("4. Search Product")
+    print("5. Save Inventory")
+    print("6. Exit")
+    print("-------------------------")
+    user_input = input("Enter Option: ")
+    if user_input.isdigit() != True:
+        print("Please input a number")
+        return None
+    return user_input
 
 def main():
     # Variables
-    inventory = []
+    inventory = 0
     exit_program = False
 
     # Main Program to get user input
     while not exit_program:
-        
-        inventory, status = load_inventory()
+        print("============================================")
+        print("INVENTORY MANAGEMENT SYSTEM")
+        print("============================================")
 
+        inventory, status = load_inventory()
         if status:
             print("inventory.json found.")
             print("Inventory loaded successfully.")
         else:
             print("Failed to load inventory.")
             # break
+
+        # Menu
+        user_input = get_valid_input()
 
         
     #     if stockQty == "quit":
