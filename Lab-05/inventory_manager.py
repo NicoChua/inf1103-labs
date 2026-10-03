@@ -54,6 +54,11 @@ def update_stock(inventory, product_id, new_stock):
     else:
         return False
 
+# Display Inventory
+def display_all(inventory):
+    for product in inventory:
+        print(f"ID: {product['id']} | Name: {product['name']} | Price: {product['price']} | Stock: {product['stock']}")
+
 # Gets and validates user input
 def get_valid_input():
     print("----------MENU----------")
