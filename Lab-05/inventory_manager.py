@@ -36,6 +36,23 @@ def search_product(inventory, product_id):
     else:
         return None
 
+# Add Product to inventory
+def add_product(inventory, product_id, name, price, stock):
+    for product in inventory:
+        if product['id'] == product_id:
+            return False
+    else:
+        inventory.append(product)
+        save_inventory(inventory)
+        return True
+
+# Update Product in inventory
+def update_stock(inventory, product_id, new_stock):
+    for product in inventory:
+        if product['id'] == product_id:
+            return True
+    else:
+        return False
 
 # Gets and validates user input
 def get_valid_input():
