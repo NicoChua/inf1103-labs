@@ -28,6 +28,14 @@ def save_inventory(inventory):
     except Exception as e:
         print("Unable to save inventory")
 
+# Search for Product ID
+def search_product(inventory, product_id):
+    for product in inventory:
+        if product['id'] == product_id:
+            return product
+    else:
+        return None
+
 
 # Gets and validates user input
 def get_valid_input():
@@ -66,6 +74,7 @@ def main():
 
         # Menu
         user_input = get_valid_input()
+
 
         
     #     if stockQty == "quit":
