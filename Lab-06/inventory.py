@@ -24,3 +24,7 @@ class Inventory:
         for p in self.__inventory:
             p.display_information()
 
+    # Returns all products as a list of dictionaries
+    def to_list(self):
+        return [p.to_dict() for p in self.__inventory]
+
