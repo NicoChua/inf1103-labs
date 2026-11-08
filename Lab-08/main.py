@@ -11,7 +11,6 @@ DEFAULT_SUPPLIER = Supplier("S000", "Unknown Supplier", "N/A")
 
 
 # Returns the existing Supplier with this ID, or creates and registers a new one.
-# This lets many Products share one Supplier object (Supplier 1 -- 0..* Product).
 def get_or_create_supplier(suppliers: dict[str, Supplier], supplier_id: str,
                            name: str, contact_email: str) -> Supplier:
     if supplier_id not in suppliers:
@@ -20,7 +19,6 @@ def get_or_create_supplier(suppliers: dict[str, Supplier], supplier_id: str,
 
 
 # Loads Inventory from inventory.json
-# Returns (inventory, status). status is False only if the file exists but could not be read.
 def load_inventory(suppliers: dict[str, Supplier]) -> tuple[Inventory, bool]:
     inventory = Inventory()
 
@@ -36,7 +34,6 @@ def load_inventory(suppliers: dict[str, Supplier]) -> tuple[Inventory, bool]:
 
     for item in data:
         try:
-            # Older save files have no supplier, so fall back to a default supplier
             if "supplier" in item:
                 s = item["supplier"]
                 supplier = get_or_create_supplier(suppliers, s["id"], s["name"], s["contact_email"])
@@ -89,7 +86,7 @@ def get_valid_input() -> str | None:
     return user_input
 
 
-# Asks for a supplier ID; reuses a known supplier or asks for the new supplier's details
+# Asks for a supplier ID
 def get_supplier_from_input(suppliers: dict[str, Supplier]) -> Supplier:
     supplier_id = input("Supplier ID: ")
     if supplier_id in suppliers:
@@ -100,7 +97,7 @@ def get_supplier_from_input(suppliers: dict[str, Supplier]) -> Supplier:
     return get_or_create_supplier(suppliers, supplier_id, name, contact_email)
 
 
-# Add Product: Asks user for product details and returns a PhysicalProduct or DigitalProduct
+# Add Product
 def create_product_from_input(suppliers: dict[str, Supplier]) -> Product | None:
     print("Select Product Type")
     print("1. Physical Product")

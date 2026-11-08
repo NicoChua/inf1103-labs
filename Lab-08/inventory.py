@@ -18,7 +18,7 @@ class Inventory:
         product = self.find_product(product_id)
         if product is None:
             return False
-        self.__products.remove(product)   # removes the reference only; the object still exists
+        self.__products.remove(product)
         return True
 
     def find_product(self, product_id: str) -> Product | None:
@@ -27,8 +27,6 @@ class Inventory:
                 return product
         return None
 
-    # Polymorphism: one loop over Product references, no isinstance() checks.
-    # Each object runs its own display_information() / get_fulfilment_info().
     def display_all(self) -> None:
         for product in self.__products:
             product.display_information()
