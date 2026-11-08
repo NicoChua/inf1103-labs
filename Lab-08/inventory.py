@@ -1,9 +1,8 @@
 from product import Product
 
 class Inventory:
-    def __init__(self):
+    def __init__(self) -> None:
         self.__products: list[Product] = []
-
 
     def get_products(self) -> list[Product]:
         return list(self.__products)   # a copy, so outsiders can't modify the real list
@@ -28,20 +27,10 @@ class Inventory:
                 return product
         return None
 
-
-    def search_product(self, product_id):
-        for product in self.__products:
-            if product.get_product_id() == product_id:
-                product.display_information()
-                return product
-        else:
-            print("Product not found")
-
-    def display_all(self):
+    def display_all(self) -> None:
         for product in self.__products:
             product.display_information()
 
     # Returns all products as a list of dictionaries
-    def to_list(self):
+    def to_list(self) -> list[dict]:
         return [product.to_dict() for product in self.__products]
-
