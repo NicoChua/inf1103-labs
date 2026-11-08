@@ -27,9 +27,13 @@ class Inventory:
                 return product
         return None
 
+    # Polymorphism: one loop over Product references, no isinstance() checks.
+    # Each object runs its own display_information() / get_fulfilment_info().
     def display_all(self) -> None:
         for product in self.__products:
             product.display_information()
+            print(product.get_fulfilment_info())
+            print()
 
     # Returns all products as a list of dictionaries
     def to_list(self) -> list[dict]:
