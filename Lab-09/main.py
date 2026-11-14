@@ -1,11 +1,14 @@
 import json
 from product import Product
 from product_factory import ProductFactory
+from product_loader import load_products
+from input_helpers import get_positive_float, get_non_negative_float, get_non_negative_int
 from inventory import Inventory
 from supplier import Supplier
 
 # Global Constants
 INVENTORY_FILE = "inventory.json"
+PRODUCTS_CSV = "products.csv"
 DEFAULT_SUPPLIER = Supplier("S000", "Unknown Supplier", "N/A")
 
 
@@ -73,7 +76,8 @@ def get_valid_input() -> str | None:
     print("4. Search Product")
     print("5. Remove Product")
     print("6. Save Inventory")
-    print("7. Exit")
+    print("7. Import Products from CSV")
+    print("8. Exit")
     print("-------------------------")
     user_input = input("Enter Option: ")
     if not user_input.isdigit():
@@ -105,20 +109,13 @@ def create_product_from_input(suppliers: dict[str, Supplier]) -> Product | None:
 
     product_id = input("Product ID: ")
     name = input("Product Name: ")
-    try:
-        price = float(input("Price: "))
-        stock = int(input("Stock Quantity: "))
-        if product_type == "1":
-            extra = float(input("Weight (kg): "))
-        else:
-            extra = float(input("Download Size (MB): "))
-    except ValueError:
-        print("Invalid input. Product not added")
-        return None
-
-    if extra < 0:
-        print("Weight / download size cannot be negative. Product not added")
-        return None
+    # Each helper keeps asking until the value is valid, so we never continue with bad data
+    price = get_positive_float("Price: ")
+    stock = get_non_negative_int("Stock Quantity: ")
+    if product_type == "1":
+        extra = get_non_negative_float("Weight (kg): ")
+    else:
+        extra = get_non_negative_float("Download Size (MB): ")
 
     supplier = get_supplier_from_input(suppliers)
 
@@ -202,6 +199,10 @@ def main() -> None:
             elif save_inventory(inventory):
                 print("Inventory saved successfully")
         elif user_input == "7":
+            print(f"Import Products from {PRODUCTS_CSV}")
+            supplier = get_supplier_from_input(suppliers)
+            load_products(PRODUCTS_CSV, inventory, supplier)
+        elif user_input == "8":
             if can_save:
                 print("Saving inventory before exit...")
                 if save_inventory(inventory):
@@ -209,7 +210,7 @@ def main() -> None:
             print("\nThank you for using Inventory Management System.\nProgram terminated")
             break
         elif user_input is not None:
-            print("Invalid option. Please choose 1-7")
+            print("Invalid option. Please choose 1-8")
 
 # Main Function
 if __name__ == "__main__":
