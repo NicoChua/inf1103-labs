@@ -1,7 +1,6 @@
 import json
 from product import Product
-from physical_product import PhysicalProduct
-from digital_product import DigitalProduct
+from product_factory import ProductFactory
 from inventory import Inventory
 from supplier import Supplier
 
@@ -40,15 +39,12 @@ def load_inventory(suppliers: dict[str, Supplier]) -> tuple[Inventory, bool]:
             else:
                 supplier = DEFAULT_SUPPLIER
 
-            if item["type"] == "physical":
-                product: Product = PhysicalProduct(item["id"], item["name"], float(item["price"]),
-                                                   int(item["stock"]), supplier, float(item["weight"]))
-            elif item["type"] == "digital":
-                product = DigitalProduct(item["id"], item["name"], float(item["price"]),
-                                         int(item["stock"]), supplier, float(item["download_size"]))
-            else:
-                print(f"Unknown product type: {item['type']}. Skipped")
-                continue
+            # The factory decides which subclass to build (raises ValueError for unknown types)
+            product: Product = ProductFactory.create(
+                item["type"], item["id"], item["name"], float(item["price"]),
+                int(item["stock"]), supplier,
+                weight=float(item.get("weight", 0.0)),
+                download_size=float(item.get("download_size", 0.0)))
         except (KeyError, ValueError, TypeError) as e:
             print(f"Invalid product entry {item}: {e}. Skipped")
             continue
@@ -127,9 +123,11 @@ def create_product_from_input(suppliers: dict[str, Supplier]) -> Product | None:
     supplier = get_supplier_from_input(suppliers)
 
     if product_type == "1":
-        return PhysicalProduct(product_id, name, price, stock, supplier, extra)
+        return ProductFactory.create("physical", product_id, name, price, stock, supplier,
+                                     weight=extra)
     else:
-        return DigitalProduct(product_id, name, price, stock, supplier, extra)
+        return ProductFactory.create("digital", product_id, name, price, stock, supplier,
+                                     download_size=extra)
 
 
 def main() -> None:
