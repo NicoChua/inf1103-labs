@@ -116,18 +116,23 @@ def create_product_from_input(suppliers: dict[str, Supplier]) -> Product | None:
         print("Invalid input. Product not added")
         return None
 
-    if price < 0 or stock < 0 or extra < 0:
-        print("Values cannot be negative. Product not added")
+    if extra < 0:
+        print("Weight / download size cannot be negative. Product not added")
         return None
 
     supplier = get_supplier_from_input(suppliers)
 
-    if product_type == "1":
-        return ProductFactory.create("physical", product_id, name, price, stock, supplier,
-                                     weight=extra)
-    else:
-        return ProductFactory.create("digital", product_id, name, price, stock, supplier,
-                                     download_size=extra)
+    # Price and stock rules are checked by Product itself; report its message if broken
+    try:
+        if product_type == "1":
+            return ProductFactory.create("physical", product_id, name, price, stock, supplier,
+                                         weight=extra)
+        else:
+            return ProductFactory.create("digital", product_id, name, price, stock, supplier,
+                                         download_size=extra)
+    except ValueError as e:
+        print(f"{e} Product not added")
+        return None
 
 
 def main() -> None:
